@@ -1,0 +1,18 @@
+create database usuarios_emails;
+use usuarios_emails;
+create table usuario (
+id int not null auto_increment,
+nome varchar(255) not null,
+email varchar(255) not null,
+telefone varchar(255) not null,
+nascimento date not null,
+primary key(id)
+);
+
+insert into usuario (id,nome,email,telefone,nascimento) values (null,'Gabriel Ferreira', 'ferreiragabriel2612@gmail.com','11 999755909','1997-12-26');
+insert into usuario (id,nome,email,telefone,nascimento) values (null,'Marina Pereira', 'marina123@gmail.com','11 21560912','1994-04-26');
+insert into usuario (id,nome,email,telefone,nascimento) values (null,'José da Silva', 'jose0809@outloook.com','11 999750912','1987-05-12');
+insert into usuario (id,nome,email,telefone,nascimento) values (null,'Marcos Martins da Silva', 'martinsmarcos123@gmail.com','11 21334210','2000-05-12');
+insert into usuario (id,nome,email,telefone,nascimento) values (null,'Joanna Maria', 'joanna0908@gmail.com','11 999122332','1986-05-12');
+
+select * from usuario;
