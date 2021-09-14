@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.context.FacesContext;
+
 import org.apache.log4j.Logger;
 
 import br.com.gabrielferreira.entidade.Usuario;
@@ -34,7 +36,9 @@ public class UsuarioServico implements Serializable {
 		byte[] bytesArquivo = null;
 		try {
 			
-			String caminho = "C:\\Users\\Acer\\Desktop\\Curso Java\\Projetos\\ProjetoEnvioEmail\\src\\main\\webapp\\resources\\relatorio\\usuario\\Usuario.jrxml";
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			//String caminhoTeste = "C:\\Users\\Acer\\Desktop\\Curso Java\\Projetos\\ProjetoEnvioEmail\\src\\main\\webapp\\resources\\relatorio\\usuario\\Usuario.jrxml";
+			String caminho = facesContext.getExternalContext().getRealPath("/resources/relatorio/usuario/Usuario.jrxml");
 			JasperReport compilarRelatorio = JasperCompileManager.compileReport(caminho);
 			JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(usuarios);
 			Map<String, Object> paramatros = new LinkedHashMap<String, Object>();
