@@ -1,5 +1,6 @@
 package br.com.gabrielferreira.email.envio;
 
+import java.io.Serializable;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -14,8 +15,12 @@ import org.apache.log4j.Logger;
 import br.com.gabrielferreira.email.config.ConfiguracaoEmail;
 import br.com.gabrielferreira.entidade.Email;
 
-public class EnvioMailHog implements ConfiguracaoEmail{
+public class EnvioMailHog implements ConfiguracaoEmail, Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static String EMAIL_USUARIO_FINAL = "ferreiragab261297@gmail.com";
 
 	// Para o MailHog, foi definidos as propriedades no standalone-full.xml

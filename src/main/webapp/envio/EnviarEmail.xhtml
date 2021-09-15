@@ -17,14 +17,22 @@
 		<div align="center" >
 			<h:panelGroup id="pnlEnviarEmail" >
 				<h:panelGrid columns="2" >
-					
-					<p:outputLabel for="email" value="E-mail" />
-					<p:inputText label="E-mail" value="#{emailControle.destinatario}"  id="email" required="true" requiredMessage="É necessário informar o e-mail" 
+				
+					<p:outputLabel for="email" value="E-mail : " />
+					<p:inputText style="width:100%" label="E-mail" value="#{emailControle.destinatario}"  id="email" required="true" requiredMessage="É necessário informar o e-mail" 
 						maxlength="150" size="15" validator="#{emailValidator.validate}"  />
+					
+					<p:outputLabel for="titulo" value="Título : " />
+					<p:inputText style="width:100%;" label="Título" value="#{emailControle.email.titulo}"  id="titulo" required="true" requiredMessage="É necessário informar o título" 
+						maxlength="250" size="15" />
+						
+					<p:outputLabel for="assunto" value="Assunto : " />
+					<p:textEditor label="Assunto" value="#{emailControle.email.assunto}" id="assunto" required="true" 
+						requiredMessage="É necessário informar o assunto"  height="150" ></p:textEditor>
 						
 					<p:outputLabel />
 					<p:commandButton style="width:100%" id="btnEnviar"
-								value="Enviar e-mail" action="#{emailControle.enviarEmail}"
+								value="Enviar e-mail" action="#{emailControle.enviarEmailComMailHog}"
 								ajax="false" process="@this" update="@form" />
 				</h:panelGrid>
 			</h:panelGroup>
