@@ -3,7 +3,7 @@
   <display-name>ProjetoEnvioEmail</display-name>
   
    <welcome-file-list>
-  	<welcome-file>envio/EnviarEmail.xhtml</welcome-file>
+  	<welcome-file>envio/EnviarEmailMailHog.xhtml</welcome-file>
   </welcome-file-list>
   
   <resource-env-ref>

@@ -10,6 +10,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import br.com.gabrielferreira.email.envio.EnvioGmail;
 import br.com.gabrielferreira.email.envio.EnvioMailHog;
 import br.com.gabrielferreira.entidade.Email;
 
@@ -25,6 +26,9 @@ public class EmailControle implements Serializable{
 	@Inject
 	private EnvioMailHog envioMailHog;
 	
+	@Inject
+	private EnvioGmail envioGmail;
+	
 	private Email email;
 	
 	private String destinatario;
@@ -38,6 +42,14 @@ public class EmailControle implements Serializable{
 		email.getDestinatarios().add(destinatario);
 		adicionarMensagem("frmEnviarEmail:msg",FacesMessage.SEVERITY_INFO,"E-mail enviado com sucesso !!",null);
 		envioMailHog.enviarEmail(email);
+		destinatario = null;
+		email = new Email();
+	}
+	
+	public void enviarEmailComGmail() {
+		email.getDestinatarios().add(destinatario);
+		adicionarMensagem("frmEnviarEmailGmail:msg",FacesMessage.SEVERITY_INFO,"E-mail enviado com sucesso !!",null);
+		envioGmail.enviarEmail(email);
 		destinatario = null;
 		email = new Email();
 	}
