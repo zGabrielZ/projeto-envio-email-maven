@@ -1,21 +1,32 @@
 package br.com.gabrielferreira.email.envio;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.log4j.Logger;
 
 import br.com.gabrielferreira.email.config.ConfiguracaoEmail;
 import br.com.gabrielferreira.entidade.Email;
+import br.com.gabrielferreira.servico.UsuarioServico;
 
 public class EnvioGmail implements ConfiguracaoEmail, Serializable{
 
@@ -26,6 +37,9 @@ public class EnvioGmail implements ConfiguracaoEmail, Serializable{
 	private static String EMAIL_USUARIO_FINAL = "ferreiragab261297@gmail.com";
 	private static String NOME_USUARIO_FINAL = "Gabriel Ferreira";
 	private static String SENHA_FINAL = "";
+	
+	@Inject
+	private UsuarioServico usuarioServico;
 
 	@Override
 	public Properties definirPropriedades() {
@@ -93,5 +107,66 @@ public class EnvioGmail implements ConfiguracaoEmail, Serializable{
 			Logger.getLogger(e.getMessage());
 		}
 	}
+	
+	public void enviarEmailComPdf(Email email) {
+		Properties properties = definirPropriedades();
+		Session session = conectarServidor(properties);
+		
+		// Enviar o e-mail
+		email.getDestinatarios().add(EMAIL_USUARIO_FINAL);
+		try {
+			
+			String emails = email.getDestinatarios().toString();
+			String emailsFormatados = emails.substring(1, emails.length() - 1);
+			Address[] destinatarios = InternetAddress.parse(emailsFormatados);
+			
+			Message message = new MimeMessage(session);
+			
+			// Quem está enviando 
+			message.setFrom(new InternetAddress(EMAIL_USUARIO_FINAL,NOME_USUARIO_FINAL));
+			
+			// Email de destino 
+			message.setRecipients(Message.RecipientType.TO, destinatarios);
+			
+			// Titulo do e-mail
+			message.setSubject(email.getTitulo());
+			
+			// Primeira parte -> so o texto,titulo, corpo do email
+			MimeBodyPart corpoEmail = new MimeBodyPart();	
+			// Texto do e-mail em formato HTML
+			corpoEmail.setContent(email.getAssunto(), "text/html; charset=utf-8");
+			
+			// Segunda parte -> so o anexo do pdf
+			MimeBodyPart anexoEmail = new MimeBodyPart();
+			anexoEmail.setDataHandler(new DataHandler(new ByteArrayDataSource(geracaoPdfUsuario(), "application/pdf")));
+			anexoEmail.setFileName("Relatório de usuários.pdf");
+			
+			// Juntando essas duas partes 
+			
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(corpoEmail);
+			multipart.addBodyPart(anexoEmail);
+			
+			message.setContent(multipart);
+			
+			// Enviando e-mail
+			Transport.send(message);
+				
+		} catch (Exception e) {
+			Logger.getLogger(e.getMessage());
+		}
+	}
+	
+	// Esse método vai pegar o byte[] do nosso pdf e seta como anexo no envio de email
+ 	private FileInputStream geracaoPdfUsuario() throws IOException {
+		File file = new File("Relatório de Usuários.pdf");
+		FileOutputStream fileOutputStream = new FileOutputStream(file);
+		fileOutputStream.write(usuarioServico.gerarRelatorioUsuario());
+		fileOutputStream.flush();
+		fileOutputStream.close();
+		return new FileInputStream(file);
+	}
+	
+	
 
 }

@@ -54,6 +54,14 @@ public class EmailControle implements Serializable{
 		email = new Email();
 	}
 	
+	public void enviarEmailComGmailAnexo() {
+		email.getDestinatarios().add(destinatario);
+		adicionarMensagem("frmEnviarEmailGmailAnexo:msg",FacesMessage.SEVERITY_INFO,"E-mail enviado com sucesso !!",null);
+		envioGmail.enviarEmailComPdf(email);
+		destinatario = null;
+		email = new Email();
+	}
+	
 	private void adicionarMensagem(String id, Severity severity,String sumario, String detalhe) {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		FacesMessage facesMessage = new FacesMessage(severity, sumario, detalhe);
